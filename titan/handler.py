@@ -3,7 +3,7 @@ import json
 import boto3
 
 def main(event, context):
-    model_id = os.environ.get("MODEL_ID", amazon.titan-text-lite-v1)
+    model_id = os.environ.get("MODEL_ID", "amazon.titan-text-lite-v1")
 
     prompt = event.get("prompt", "Titan Model")
 

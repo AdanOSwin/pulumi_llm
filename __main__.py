@@ -25,7 +25,7 @@ lambda_titan = aws.lambda_.Function(f"{env}-titan-func",
                                     runtime = "python3.11",
                                     handler="handler.main",
                                     code = pulumi.AssetArchive({
-                                        ".": pulumi.FileArchive("./lambda_titan")
+                                        ".": pulumi.FileArchive("./titan")
                                     }),
                                     environment=aws.lambda_.FunctionEnvironmentArgs(variables={
                                         "MODEL_ID": "amazon.titan-text-lite-v1"
@@ -38,7 +38,7 @@ lambda_claude = aws.lambda_.Function(f"{env}-claude-func",
                                      runtime = "python3.11",
                                      handler="handler.main",
                                      code = pulumi.AssetArchive({
-                                         ".": pulumi.FileArchive("./lambda_Claude")
+                                         ".": pulumi.FileArchive("./Claude")
                                      }),
                                      environment=aws.lambda_.FunctionEnvironemtArgs(variables={
                                          "MODEL_ID":"anthropic.claude-3.sonnet-20240229-v1:0"

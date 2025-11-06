@@ -11,8 +11,12 @@ RUN ./aws/install
 RUN rm -rf awscliv2.zip aws
 RUN pip3 install boto3 --break-system-packages
 #RUN pip3 install awscli --break-system-packages
-RUN curl -fsSL https://get.pulumi.com | sh
-RUN ln -s /root/.pulumi/bin/pulumi /usr/local/bin/pulumi && chmod +x /usr/local/bin/pulumi && pulumi version
+RUN curl -fsSL https://get.pulumi.com/releases/sdk/pulumi-v3.150.0-linux-x64.tar.gz -o pulumi.tar.gz
+RUN tar -xzf pulumi.tar.gz
+RUN mv pulumi/pulumi /usr/local/bin/pulumi
+RUN chmod +x /usr/local/bin/pulumi
+RUN rm -rf pulumi pulumi.tar.gz
+#RUN ln -s /root/.pulumi/bin/pulumi /usr/local/bin/pulumi && chmod +x /usr/local/bin/pulumi && pulumi version
 
 ENV PATH="usr/local/bin:/root/.pulumi/bin:${PATH}"
 

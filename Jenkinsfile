@@ -62,7 +62,9 @@ pipeline{
                     pulumi stack select ${ENVIRONMENT} || pulumi stack init ${ENVIRONMENT}
                     pulumi preview
                     deactivate
+            
                 '''
+                }
             }
         }
 

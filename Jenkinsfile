@@ -46,7 +46,7 @@ pipeline {
                 echo "Starting the configuration of the python environment"
                 sh '''
                     python3 -m venv pulumi_llm
-                    source pulumi_llm/bin/activate
+                    . pulumi_llm/bin/activate
                     pip install --upgrade pip
                     pip install pulumi pulumi-aws boto3
                     deactivate

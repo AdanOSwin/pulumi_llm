@@ -60,7 +60,6 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "Pulumi Login"
                     sh '''
-                        cd pulumi_llm
                         . pulumi_llm/bin/activate
 
                         echo "######################################"

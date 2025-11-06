@@ -20,15 +20,17 @@ pipeline {
     stages {
 
         stage('Check python venv'){
-            sh '''
-                if ! dpkg -s python3-venv >/dev/null 2>&1; then
-                    echo "instalando python venv"
-                    sudo apt update
-                    sudo apt install -y python3-venv
-                else
-                    echo "python3-venv ya existe"
-                fi
-            '''
+            steps {
+                sh '''
+                    if ! dpkg -s python3-venv >/dev/null 2>&1; then
+                        echo "instalando python venv"
+                        sudo apt update
+                        sudo apt install -y python3-venv
+                    else
+                        echo "python3-venv ya existe"
+                    fi
+                '''
+            }
         }
 
         stage('Remove previous workspace') {

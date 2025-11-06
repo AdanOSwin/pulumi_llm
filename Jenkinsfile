@@ -55,7 +55,7 @@ pipeline{
 
         stage('Pulumi config'){
             steps{
-                withAWS(credentials: 'aws_credentials', region: "${AWS_DEFAULT_REGION}" {
+                withAWS(credentials: 'aws_credentials', region: "${AWS_DEFAULT_REGION}") {
                 echo "Pulumi Login"
                 sh '''
                     source pulumi_llm/bin/activate

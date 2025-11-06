@@ -89,8 +89,19 @@ pipeline{
                         deactivate
                         '''
                 }   
-            }
+                //script{
+                //    if (!params.AUTO_APPROVE){
+                //        input message: "do you want to deploy the changes to ${params.ENVIRONMENT} environment?"
+                //    }
+
+                //}
+                //sh '''
+                //    source pulumi_llm/bin/activate
+                //    pulumi up --yes --stack ${ENVIRONMENT}
+                //'''
+            //}
         }
+    }
 
     post{
         success{

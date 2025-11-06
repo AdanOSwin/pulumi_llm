@@ -11,7 +11,7 @@ pipeline {
         AWS_REGION = 'us-east-1'
         PULUMI_ACCESS_TOKEN = credentials("pulumi_token")
         PULUMI_CI = 'true'
-        PATH = "$WORKSPACE/venv/bin:$PATH"
+        PATH = "$WORKSPACE/pulumi_llm/bin:$PATH"
     }
 
     options {
@@ -60,7 +60,13 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "Pulumi Login"
                     sh '''
+                        cd $WORKSPACE
                         . pulumi_llm/bin/activate
+
+                        echo "######################################"
+                        pwd 
+                        ls -la
+                        echo "########################################"
                         pulumi stack select ${ENVIRONMENT} || pulumi stack init ${ENVIRONMENT}
                         pulumi preview
                         deactivate
@@ -70,10 +76,12 @@ pipeline {
         }
 
         stage('deploy pulumi') {
+            when { expression { return params.DESTROY == false }}
             steps {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "deploying infra"
                     sh '''
+                        cd $WORKSPACE
                         source pulumi_llm/bin/activate
                         pulumi up --yes --skip-preview
                         deactivate
@@ -90,6 +98,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}")
                 echo "DEstroying infra"
                 sh '''
+                    cd $WORKSPACE
                     . pulumi_llm/bin/activate
                     pulumi stack select ${ENVIRONMENT}
                     pulumi destroy --yes

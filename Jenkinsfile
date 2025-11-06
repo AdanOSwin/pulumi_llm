@@ -59,7 +59,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_DEFAULT_REGION}") {
                     echo "Pulumi Login"
                     sh '''
-                        source pulumi_llm/bin/activate
+                        . pulumi_llm/bin/activate
                         pulumi stack select ${ENVIRONMENT} || pulumi stack init ${ENVIRONMENT}
                         pulumi preview
                         deactivate

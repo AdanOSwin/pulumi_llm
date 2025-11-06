@@ -46,8 +46,8 @@ pipeline {
             steps {
                 echo "Starting the configuration of the python environment"
                 sh '''
-                    python3 -m venv llm
-                    . llm/bin/activate
+                    python3 -m venv pulumi_llm
+                    . pulumi_llm/bin/activate
                     pip install --upgrade pip
                     pip install pulumi pulumi-aws boto3
                     deactivate
@@ -60,7 +60,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "Pulumi Login"
                     sh '''
-                        . llm/bin/activate
+                        . pulumi_llm/bin/activate
 
                         echo "######################## $WORKSPACE ##########################"
                         
@@ -70,7 +70,7 @@ pipeline {
                         ls -la 
                         echo "########################################"
                         echo "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                        ls -la llm/
+                        ls -la pulumi_llm/
 
                         echo "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
 
@@ -88,8 +88,8 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "deploying infra"
                     sh '''
-                        cd llm
-                        . llm/bin/activate
+                        cd pulumi_llm
+                        . pulumi_llm/bin/activate
                         pulumi up --yes --skip-preview
                         deactivate
                     '''
@@ -106,7 +106,7 @@ pipeline {
                 echo "DEstroying infra"
                 sh '''
                     cd llm
-                    . llm/bin/activate
+                    . pulumi_llm/bin/activate
                     pulumi stack select ${ENVIRONMENT}
                     pulumi destroy --yes
                     deactivate
@@ -128,7 +128,7 @@ pipeline {
             sh '''
                 deactivate 2>/dev/null || true
                 pulumi logout || true
-                rm -rf llm
+                rm -rf pulumi_llm
             '''
         }
     }

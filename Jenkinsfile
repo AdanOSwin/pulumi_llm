@@ -60,7 +60,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "Pulumi Login"
                     sh '''
-                        cd $WORKSPACE/pulumi_llm
+                        cd pulumi_llm
                         . pulumi_llm/bin/activate
 
                         echo "######################################"
@@ -86,7 +86,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "deploying infra"
                     sh '''
-                        cd $WORKSPACE/pulumi_llm
+                        cd pulumi_llm
                         source pulumi_llm/bin/activate
                         pulumi up --yes --skip-preview
                         deactivate
@@ -103,7 +103,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}")
                 echo "DEstroying infra"
                 sh '''
-                    cd $WORKSPACE
+                    cd pulumi_llm
                     . pulumi_llm/bin/activate
                     pulumi stack select ${ENVIRONMENT}
                     pulumi destroy --yes

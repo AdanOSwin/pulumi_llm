@@ -46,8 +46,8 @@ pipeline {
             steps {
                 echo "Starting the configuration of the python environment"
                 sh '''
-                    python3 -m venv pulumi_llm
-                    . pulumi_llm/bin/activate
+                    python3 -m venv llm
+                    . llm/bin/activate
                     pip install --upgrade pip
                     pip install pulumi pulumi-aws boto3
                     deactivate
@@ -60,7 +60,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "Pulumi Login"
                     sh '''
-                        . pulumi_llm/bin/activate
+                        . llm/bin/activate
 
                         echo "######################## $WORKSPACE ##########################"
                         
@@ -89,7 +89,7 @@ pipeline {
                     echo "deploying infra"
                     sh '''
                         cd pulumi_llm
-                        source pulumi_llm/bin/activate
+                        . llm/bin/activate
                         pulumi up --yes --skip-preview
                         deactivate
                     '''
@@ -106,7 +106,7 @@ pipeline {
                 echo "DEstroying infra"
                 sh '''
                     cd pulumi_llm
-                    . pulumi_llm/bin/activate
+                    . llm/bin/activate
                     pulumi stack select ${ENVIRONMENT}
                     pulumi destroy --yes
                     deactivate

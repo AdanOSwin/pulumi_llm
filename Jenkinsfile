@@ -88,7 +88,7 @@ pipeline {
             }
             steps {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}")
-                echo "DEstroying the infra"
+                echo "DEstroying infra"
                 sh '''
                     . pulumi_llm/bin/activate
                     pulumi stack select ${ENVIRONMENT}

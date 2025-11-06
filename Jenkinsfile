@@ -1,6 +1,6 @@
-pipeline{
+pipeline {
     agent any
-    
+
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'])
         booleanParam(name: 'AUTO_APPROVE', defaultValue: false)
@@ -8,40 +8,27 @@ pipeline{
 
     environment { 
         AWS_REGION = 'us-east-1'
-        //#AWS_ACCESS_KEY_ID = credentials("")
-        //AWS_SECRET_ACCESS_KEY = credentials('')
         PULUMI_ACCESS_TOKEN = credentials("pulumi_token")
         PULUMI_CI = 'true'
         PATH = "$WORKSPACE/venv/bin:$PATH"
     }
 
-    options{
+    options {
         timestamps()
     }
 
-    stages{
+    stages {
 
-        stage('Remove previous workspace'){
+        stage('Remove previous workspace') {
             steps {
-                "Removing previous python environment"
-                sh 'if [ -d venv]; then rm -rf venv; fi'
+                echo 'Removing previous python environment'
+                sh 'if [ -d venv ]; then rm -rf venv; fi'
                 deleteDir()
             }
         }
 
-        //stage('Checkout repo'){
-        //    steps { 
-        //        echo 'Cloning repo'
-        //        checkout([
-        //            $class 'GitSCM',
-        //            branches: [[name: '*/main']],
-        //            userRemoteConfigs: [[url: 'https://RandomRepoPage.com/theNameOfTheRepo.git']]
-        //        ])
-        //    }
-        //}
-
-        stage('Python env'){
-            steps{
+        stage('Python env') {
+            steps {
                 echo "Starting the configuration of the python environment"
                 sh '''
                     python3 -m venv pulumi_llm
@@ -53,54 +40,44 @@ pipeline{
             }
         }
 
-        stage('Pulumi config'){
-            steps{
+        stage('Pulumi config') {
+            steps {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_DEFAULT_REGION}") {
-                echo "Pulumi Login"
-                sh '''
-                    source pulumi_llm/bin/activate
-                    pulumi stack select ${ENVIRONMENT} || pulumi stack init ${ENVIRONMENT}
-                    pulumi preview
-                    deactivate
-            
-                '''
+                    echo "Pulumi Login"
+                    sh '''
+                        source pulumi_llm/bin/activate
+                        pulumi stack select ${ENVIRONMENT} || pulumi stack init ${ENVIRONMENT}
+                        pulumi preview
+                        deactivate
+                    '''
                 }
             }
         }
 
-        //stage('Pulumi changes'){
-        //    steps{
-        //        echo "Checking configuration that is going to be applied"
-        //        sh '''
-        //            source pulumi_llm/bin/activate
-        //            pulumi stack select ${ENVIROMNENT} || pulumi stack init {ENVIRONMENT}
-        //            pulumi preview --stack ${ENVIRONMENT}
-        //        '''
-        //    }
-        //}
-
-        stage('deploy pulumi'){
-            steps{
-                withAWS(credentials: 'aws_credentials', region: "${AWS_DEFAULT_REGION}"){
+        stage('deploy pulumi') {
+            steps {
+                withAWS(credentials: 'aws_credentials', region: "${AWS_DEFAULT_REGION}") {
                     echo "deploying infra"
                     sh '''
                         source pulumi_llm/bin/activate
                         pulumi up --yes --skip-preview
                         deactivate
-                        '''
-                }   
+                    '''
+                }
             }
         }
+    }
 
-    post{
-        success{
-            echo "the Pulumi deployment has been completed successfully in ${params.ENVIRONMENT}"
+    post {
+        success {
+            echo "The Pulumi deployment has been completed successfully in ${params.ENVIRONMENT}"
         }
 
-        failure{
+        failure {
             echo "Deployment failed, check logs for details"
         }
-        always{
+
+        always {
             sh '''
                 deactivate 2>/dev/null || true
                 pulumi logout || true

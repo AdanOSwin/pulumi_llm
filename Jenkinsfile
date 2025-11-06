@@ -70,7 +70,7 @@ pipeline {
                         ls -la 
                         echo "########################################"
                         echo "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-                        ls -la pulumi_llm/
+                        ls -la llm/
 
                         echo "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
 
@@ -88,7 +88,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "deploying infra"
                     sh '''
-                        cd pulumi_llm
+                        cd llm
                         . llm/bin/activate
                         pulumi up --yes --skip-preview
                         deactivate
@@ -105,7 +105,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}")
                 echo "DEstroying infra"
                 sh '''
-                    cd pulumi_llm
+                    cd llm
                     . llm/bin/activate
                     pulumi stack select ${ENVIRONMENT}
                     pulumi destroy --yes
@@ -128,7 +128,7 @@ pipeline {
             sh '''
                 deactivate 2>/dev/null || true
                 pulumi logout || true
-                rm -rf pulumi_llm
+                rm -rf llm
             '''
         }
     }

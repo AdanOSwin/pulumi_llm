@@ -4,6 +4,7 @@ pipeline {
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'])
         booleanParam(name: 'AUTO_APPROVE', defaultValue: false)
+        booleanParam(name: 'DESTROY', defaultValue: false, description: "Destroy infra")
     }
 
     environment { 
@@ -78,6 +79,22 @@ pipeline {
                         deactivate
                     '''
                 }
+            }
+        }
+
+        stage('pulumi destroy'){
+            when {
+                expression {return params.DESTROY == true}
+            }
+            steps {
+                withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}")
+                echo "DEstroying the infra"
+                sh '''
+                    . pulumi_llm/bin/activate
+                    pulumi stack select ${ENVIRONMENT}
+                    pulumi destroy --yes
+                    deactivate
+                '''
             }
         }
     }

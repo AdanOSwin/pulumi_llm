@@ -39,6 +39,21 @@ pipeline {
             }
         }
 
+        stage('Install Pulumi') {
+            steps {
+                sh '''
+                    if ! command -v pulumi >/dev/null 2>&1; then
+                        curl -fsSL https://get.pulumi.com | sh
+                        export PATH=$PATH:$HOME/.pulumi/bin
+                        pulumi version
+                    else
+                        echo "Pulumi CLI already installed"
+                        pulumi version
+                    fi
+                '''
+            }
+        }
+
         stage('Check python venv'){
             steps {
                 sh '''

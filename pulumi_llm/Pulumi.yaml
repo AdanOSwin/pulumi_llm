@@ -1,0 +1,3 @@
+name: llm-infra
+runtime: python
+description: Infra to deploy models of AI in aws bedrock

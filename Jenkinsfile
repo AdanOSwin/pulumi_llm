@@ -11,7 +11,7 @@ pipeline {
         AWS_REGION = 'us-east-1'
         PULUMI_ACCESS_TOKEN = credentials("pulumi_token")
         PULUMI_CI = 'true'
-        PATH = "$WORKSPACE/pulumi/bin:$PATH"
+        PATH = "$HOME/.pulumi/bin:$PATH"
     }
 
     options {

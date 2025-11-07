@@ -105,8 +105,8 @@ pipeline {
                     echo "Pulumi Login"
                     sh '''
                         cd pulumi_llm
-                        ../pulumi_llm_env/bin/pulumi stack select ${ENVIRONMENT} || pulumi stack init ${ENVIRONMENT}
-                        ../pulumi_llm_env/bin/pulumi preview
+                        pulumi stack select ${ENVIRONMENT} || echo " stack already exists "
+                        pulumi preview
                     '''
                 }
             }
@@ -119,7 +119,7 @@ pipeline {
                     echo "deploying infra"
                     sh '''
                         cd pulumi_llm
-                        ../pulumi_llm_env/bin/pulumi up --yes --skip-preview
+                        pulumi up --yes --skip-preview
                     '''
                 }
             }
@@ -134,8 +134,8 @@ pipeline {
                 echo "DEstroying infra"
                 sh '''
                     cd pulumi_llm
-                    ../pulumi_llm_env/bin/pulumi stack select ${ENVIRONMENT}
-                    ../pulumi_llm_env/bin/pulumi destroy --yes
+                    pulumi stack select ${ENVIRONMENT}
+                    pulumi destroy --yes
                     deactivate
                 '''
             }

@@ -34,7 +34,7 @@ pipeline {
                 echo "CLoning repo"
                 checkout scm
                 sh '''
-                    ls -la
+                    ls
                 '''
             }
         }
@@ -66,9 +66,10 @@ pipeline {
                 echo "Starting the configuration of the python environment"
                 sh '''
                     python3 -m venv pulumi_llm_env
-                    . pulumi_llm_env/bin/activate
+                    source pulumi_llm_env/bin/activate
                     pip install --upgrade pip
                     pip install pulumi pulumi-aws boto3
+                    pulumi plugin install language python
                     deactivate
                 '''
             }
@@ -89,16 +90,8 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "Pulumi Login"
                     sh '''
-                        . pulumi_llm_env/bin/activate
+                        source pulumi_llm_env/bin/activate
                         cd pulumi_llm
-                        echo "######################## $WORKSPACE ##########################"
-                        pwd
-                        echo "##################################"
-                        echo "######################################"
-                        pwd 
-                        ls -la 
-                        echo "########################################"
-
                         pulumi stack select ${ENVIRONMENT} || pulumi stack init ${ENVIRONMENT}
                         pulumi preview
                         deactivate
@@ -113,7 +106,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "deploying infra"
                     sh '''
-                        . pulumi_llm_env/bin/activate
+                        source pulumi_llm_env/bin/activate
                         cd pulumi_llm
                         pulumi up --yes --skip-preview
                         deactivate
@@ -130,7 +123,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}")
                 echo "DEstroying infra"
                 sh '''
-                    . pulumi_llm_env/bin/activate
+                    source pulumi_llm_env/bin/activate
                     cd pulumi_llm
                     pulumi stack select ${ENVIRONMENT}
                     pulumi destroy --yes

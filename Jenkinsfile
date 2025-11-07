@@ -11,7 +11,7 @@ pipeline {
         AWS_REGION = 'us-east-1'
         PULUMI_ACCESS_TOKEN = credentials("pulumi_token")
         PULUMI_CI = 'true'
-        PATH = "$HOME/.pulumi/bin:$PATH"
+        PATH="$HOME/.pulumi/bin:$PATH"
     }
 
     options {
@@ -104,7 +104,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "Pulumi Login"
                     sh '''
-                        export PATH = "$HOME/.pulumi/bin:$PATH"
+                        export PATH="$HOME/.pulumi/bin:$PATH"
                         cd pulumi_llm
                         pulumi stack select ${ENVIRONMENT} || echo " stack already exists "
                         pulumi preview
@@ -119,7 +119,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "deploying infra"
                     sh '''
-                        export PATH = "$HOME/.pulumi/bin:$PATH"
+                        export PATH="$HOME/.pulumi/bin:$PATH"
                         cd pulumi_llm
                         pulumi up --yes --skip-preview
                     '''
@@ -135,7 +135,7 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}")
                 echo "DEstroying infra"
                 sh '''
-                    export PATH = "$HOME/.pulumi/bin:$PATH"
+                    export PATH="$HOME/.pulumi/bin:$PATH"
                     cd pulumi_llm
                     pulumi stack select ${ENVIRONMENT}
                     pulumi destroy --yes

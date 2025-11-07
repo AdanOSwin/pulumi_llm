@@ -11,7 +11,7 @@ pipeline {
         AWS_REGION = 'us-east-1'
         PULUMI_ACCESS_TOKEN = credentials("pulumi_token")
         PULUMI_CI = 'true'
-        PATH = "$WORKSPACE/pulumi_llm/bin:$PATH"
+        PATH = "$WORKSPACE/pulumi/bin:$PATH"
     }
 
     options {
@@ -49,7 +49,7 @@ pipeline {
                         chmod +x /usr/local/bin/pulumi
                         rm -rf pulumi pulumi.tar.gz
                     else
-                        echo "Pulumi CLI already installed"
+                        echo "Pulumi already installed"
                         pulumi version
                     fi
                 '''

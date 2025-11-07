@@ -104,10 +104,10 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "Pulumi Login"
                     sh '''
-                        chmod +x ./pulumi_llm_env/bin/pulumi
+                        export PATH = "$HOME/.pulumi/bin:$PATH"
                         cd pulumi_llm
-                        ../pulumi_llm_env/bin/pulumi stack select ${ENVIRONMENT} || echo " stack already exists "
-                        ../pulumi_llm_env/bin/pulumi preview
+                        pulumi stack select ${ENVIRONMENT} || echo " stack already exists "
+                        pulumi preview
                     '''
                 }
             }
@@ -119,9 +119,9 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
                     echo "deploying infra"
                     sh '''
-                        chmod +x ./pulumi_llm_env/bin/pulumi
+                        export PATH = "$HOME/.pulumi/bin:$PATH"
                         cd pulumi_llm
-                        ../pulumi_llm_env/bin/pulumi up --yes --skip-preview
+                        pulumi up --yes --skip-preview
                     '''
                 }
             }
@@ -135,10 +135,10 @@ pipeline {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}")
                 echo "DEstroying infra"
                 sh '''
-                    chmod +x ./pulumi_llm_env/bin/pulumi
+                    export PATH = "$HOME/.pulumi/bin:$PATH"
                     cd pulumi_llm
-                    ../pulumi_llm_env/bin/pulumi stack select ${ENVIRONMENT}
-                    ../pulumi_llm_env/bin/pulumi destroy --yes
+                    pulumi stack select ${ENVIRONMENT}
+                    pulumi destroy --yes
                     deactivate
                 '''
             }

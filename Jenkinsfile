@@ -43,9 +43,11 @@ pipeline {
             steps {
                 sh '''
                     if ! command -v pulumi >/dev/null 2>&1; then
-                        curl -fsSL https://get.pulumi.com | sh
-                        export PATH=$PATH:$HOME/.pulumi/bin
-                        pulumi version
+                        curl -fsSL https://get.pulumi.com/releases/sdk/pulumi-v3.150.0-linux-x64.tar.gz -o pulumi.tar.gz
+                        tar -xzf pulumi.tar.gz
+                        mv pulumi/pulumi /usr/local/bin/pulumi
+                        chmod +x /usr/local/bin/pulumi
+                        rm -rf pulumi pulumi.tar.gz
                     else
                         echo "Pulumi CLI already installed"
                         pulumi version

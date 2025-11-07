@@ -20,12 +20,21 @@ pipeline {
 
     stages {
 
-        stage('clean workspace'){
-            steps{
-                sh '''
-                    rm -rf pulumi pulumi_llm __pycache
+        //stage('clean workspace'){
+        //    steps{
+        //        sh '''
+        //            rm -rf pulumi pulumi_llm __pycache
 
-                    find . -type d -name "__pycache__" -exec rm -rf {} +
+        //            find . -type d -name "__pycache__" -exec rm -rf {} +
+        //        '''
+        //    }
+        //}
+        stage('Checkout'){
+            steps{
+                echo "CLoning repo"
+                checkout scm
+                sh '''
+                    ls -la
                 '''
             }
         }
@@ -44,13 +53,13 @@ pipeline {
             }
         }
 
-        stage('Remove previous workspace') {
-            steps {
-                echo 'Removing previous python environment'
-                sh 'if [ -d venv ]; then rm -rf venv; fi'
-                deleteDir()
-            }
-        }
+        //stage('DElete previous workspace') {
+        //    steps {
+        //        echo 'Removing previous python environment'
+        //        sh 'if [ -d venv ]; then rm -rf venv; fi'
+        //        deleteDir()
+        //    }
+        //}
 
         stage('Python env') {
             steps {
@@ -65,15 +74,15 @@ pipeline {
             }
         }
 
-        stage('DEBUGGING'){
-            steps{
-                sh '''
-                    echo "PATH: $(pwd)"
-                    echo "FILES:"
-                    ls -la
-                '''
-            }
-        }
+        //stage('DEBUG'){
+        //    steps{
+        //        sh '''
+        //            echo "PATH: $(pwd)"
+        //            echo "FILES:"
+        //            ls -la
+        //        '''
+        //    }
+        //}
 
         stage('Pulumi config') {
             steps {

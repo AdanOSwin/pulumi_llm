@@ -20,6 +20,16 @@ pipeline {
 
     stages {
 
+        stage('clean workspace'){
+            steps{
+                sh '''
+                    rm -rf pulumi pulumi_llm __pycache
+
+                    find . -type d -name "__pycache__" -exec rm -rf {} +
+                '''
+            }
+        }
+
         stage('Check python venv'){
             steps {
                 sh '''

@@ -65,6 +65,16 @@ pipeline {
             }
         }
 
+        stage('DEBUGGING'){
+            steps{
+                sh '''
+                    echo "PATH: $(pwd)"
+                    echo "FILES:"
+                    ls -la
+                '''
+            }
+        }
+
         stage('Pulumi config') {
             steps {
                 withAWS(credentials: 'aws_credentials', region: "${AWS_REGION}") {
@@ -79,9 +89,6 @@ pipeline {
                         pwd 
                         ls -la 
                         echo "########################################"
-                        echo "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-
-                        echo "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
 
                         pulumi stack select ${ENVIRONMENT} || pulumi stack init ${ENVIRONMENT}
                         pulumi preview

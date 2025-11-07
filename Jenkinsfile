@@ -85,7 +85,6 @@ pipeline {
                     python3 -m venv pulumi_llm_env
                     ./pulumi_llm_env/bin/pip install --upgrade pip
                     ./pulumi_llm_env/bin/pip install pulumi pulumi-aws boto3
-                    pulumi plugin install language python
                 '''
             }
         }
